@@ -1,0 +1,6 @@
+/* Custom green background for selected dates */
+.DayPicker-Day--selected {
+  background-color: #28a745; /* Green */
+  color: white;
+  border-radius: 50%;
+}
