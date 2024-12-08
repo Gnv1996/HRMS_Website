@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+// import axios from "axios"; // Commented out for now
 
 const Salary = () => {
-  const salaryData = [
+  // Dummy Data (to be used as fallback)
+  const dummySalaryData = [
     { month: "January", totalSalary: 30000, deducted: 2000, paid: 28000 },
     { month: "February", totalSalary: 30000, deducted: 2500, paid: 27500 },
     { month: "March", totalSalary: 30000, deducted: 0, paid: 30000 },
@@ -22,6 +24,38 @@ const Salary = () => {
   const deducted = 2000;
   const holdingAmount = 1500;
   const netSalary = basicPay + hra - pf - deducted - holdingAmount;
+
+  // State to hold salary data from API (or fallback to dummy data)
+  const [salaryData, setSalaryData] = useState(dummySalaryData);
+  const [isLoading, setIsLoading] = useState(false); // Set to false as no loading is required now
+  const [error, setError] = useState(null);
+
+  // Fetch salary data from API (this part is commented out for now)
+  useEffect(() => {
+    const fetchSalaryData = async () => {
+      try {
+        setIsLoading(true);
+        // Replace the URL below with your actual API endpoint
+        // const response = await axios.get("https://api.example.com/salary");
+        // setSalaryData(response.data); // Replace dummy data with API data
+      } catch (err) {
+        setError("Failed to fetch salary data. Using dummy data.");
+        setSalaryData(dummySalaryData); // Fallback to dummy data
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // fetchSalaryData(); // This is commented out for now
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom'; 
 import { 
   FaHome, 
   FaUserCircle, 
@@ -7,20 +7,34 @@ import {
   FaFileAlt, 
   FaCreditCard, 
   FaClipboardList, 
-  FaSignInAlt ,
+  FaSignInAlt,
   FaSignOutAlt
 } from 'react-icons/fa'; 
-
+import { MdInventory2 } from "react-icons/md";
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const location = useLocation(); // Used to track the current route for active link highlighting
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleLogout = () => {
+    // Clear authentication data from localStorage
+    localStorage.removeItem("isAuthenticated");
+    window.location.href = "/login"; // Redirect to login after logout
+  };
+
+  // Helper function to add active link class
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? 'flex items-center py-3 px-4 mb-4 rounded-lg text-lg bg-blue-700'
+      : 'flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300';
   };
 
   return (
@@ -32,62 +46,69 @@ const Sidebar = () => {
         <h2 className="text-3xl font-bold text-center text-white mb-8">HRMS</h2>
         <nav>
           <Link 
-            to="/dashboard" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            to="/" 
+            className={getLinkClass("/")}
             onClick={closeSidebar}
           >
             <FaHome className="w-6 h-6 mr-3" /> Dashboard
           </Link>
           <Link 
             to="/profile" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            className={getLinkClass("/profile")}
             onClick={closeSidebar}
           >
             <FaUserCircle className="w-6 h-6 mr-3" /> Profile
           </Link>
           <Link 
             to="/attendance" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            className={getLinkClass("/attendance")}
             onClick={closeSidebar}
           >
             <FaCalendarAlt className="w-6 h-6 mr-3" /> Attendance
           </Link>
           <Link 
             to="/weekly-report" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            className={getLinkClass("/weekly-report")}
             onClick={closeSidebar}
           >
             <FaClipboardList className="w-6 h-6 mr-3" /> Weekly Report
           </Link>
           <Link 
             to="/salary" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            className={getLinkClass("/salary")}
             onClick={closeSidebar}
           >
             <FaCreditCard className="w-6 h-6 mr-3" /> Salary
           </Link>
+        
+          <Link 
+            to="/leave-apply" 
+            className={getLinkClass("/leave-apply")}
+            onClick={closeSidebar}
+          >
+            <FaSignInAlt className="w-6 h-6 mr-3" /> My Leave
+          </Link>
+          <Link 
+            to="/inventory" 
+            className={getLinkClass("/inventory")}
+            onClick={closeSidebar}
+          >
+            <MdInventory2 className="w-6 h-6 mr-3" /> Inventory
+          </Link>
           <Link 
             to="/documents" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
+            className={getLinkClass("/documents")}
             onClick={closeSidebar}
           >
             <FaFileAlt className="w-6 h-6 mr-3" /> Documents
           </Link>
-          <Link 
-            to="/leave-apply" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
-            onClick={closeSidebar}
-          >
-            <FaSignInAlt className="w-6 h-6 mr-3" /> Leave Apply
-          </Link>
 
-          <Link 
-            to="/login" 
-            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300"
-            onClick={closeSidebar}
+          <button
+            className="flex items-center py-3 px-4 mb-4 rounded-lg text-lg hover:bg-blue-700 transition-all duration-300 w-full text-left"
+            onClick={handleLogout}
           >
             <FaSignOutAlt className="w-6 h-6 mr-3" /> Logout
-          </Link>
+          </button>
         </nav>
       </aside>
 
@@ -99,6 +120,14 @@ const Sidebar = () => {
           </svg>
         </button>
       </header>
+
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
     </>
   );
 };
