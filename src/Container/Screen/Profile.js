@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { User, Landmark, MapPin, Camera, Save, Briefcase } from "lucide-react";
 
 const Profile = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    name: "Gautam Vashisth",
     fatherName: "",
     gender: "Male",
     dob: "",
     address: "",
     profilePhoto: null,
-    role: "Software Developer",
+    role: "Senior Software Developer",
     accountNumber: "",
     bankName: "",
     branch: "",
@@ -17,186 +18,163 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePhotoUpload = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      profilePhoto: URL.createObjectURL(e.target.files[0]),
-    }));
+    if (e.target.files[0]) {
+      setFormData((prev) => ({
+        ...prev,
+        profilePhoto: URL.createObjectURL(e.target.files[0]),
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Profile Updated:", formData);
-    alert("Profile updated successfully!");
+    alert("Profile analytics updated successfully!");
   };
 
   return (
-    <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-3xl font-bold mb-6 text-center">Profile</h2>
-      <div className="flex items-center mb-6">
-        {/* Profile Image */}
-        <div>
-          {formData.profilePhoto ? (
-            <img
-              src={formData.profilePhoto}
-              alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border"
-            />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-              No Image
+    <div className="min-h-screen bg-slate-50/50 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* HEADER SECTION */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Account Settings</h2>
+            <p className="text-slate-500 mt-1 font-medium">Manage your public profile and banking information</p>
+          </div>
+          <button
+            onClick={handleSubmit}
+            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all active:scale-95"
+          >
+            <Save size={18} />
+            Save Changes
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* PROFILE HERO CARD */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-32 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+            <div className="px-8 pb-8">
+              <div className="relative flex flex-col md:flex-row items-center md:items-end -mt-16 gap-6">
+                <div className="relative group">
+                  {formData.profilePhoto ? (
+                    <img
+                      src={formData.profilePhoto}
+                      alt="Profile"
+                      className="w-32 h-32 rounded-3xl object-cover border-4 border-white shadow-xl"
+                    />
+                  ) : (
+                    <div className="w-32 h-32 rounded-3xl bg-slate-100 border-4 border-white shadow-xl flex items-center justify-center">
+                      <User size={48} className="text-slate-300" />
+                    </div>
+                  )}
+                  <label className="absolute bottom-2 right-2 p-2 bg-white rounded-xl shadow-lg border border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors">
+                    <Camera size={18} className="text-indigo-600" />
+                    <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+                  </label>
+                </div>
+                
+                <div className="text-center md:text-left mb-2">
+                  <h3 className="text-2xl font-bold text-slate-900">{formData.name || "Set Your Name"}</h3>
+                  <div className="flex items-center gap-2 text-slate-500 font-medium">
+                    <Briefcase size={16} />
+                    <span>{formData.role}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoUpload}
-            className="mt-2 block text-sm border p-2 w-28 "
-          />
-        </div>
-        {/* Role */}
-        <div className="ml-6 mb-12">
-          <p className="text-xl font-semibold">{formData.role}</p>
-          <p className="text-gray-600">Position</p>
-        </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT COLUMN: PERSONAL INFO */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                    <User size={20} />
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-900">Personal Details</h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" />
+                  <Input label="Father's Name" name="fatherName" value={formData.fatherName} onChange={handleChange} placeholder="Richard Doe" />
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700 ml-1">Gender</label>
+                    <select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 transition-all outline-none font-medium text-slate-700"
+                    >
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+
+                  <Input label="Date of Birth" name="dob" type="date" value={formData.dob} onChange={handleChange} />
+                </div>
+
+                <div className="mt-6 space-y-1.5">
+                  <label className="text-sm font-bold text-slate-700 ml-1">Current Address</label>
+                  <div className="relative">
+                    <MapPin size={18} className="absolute left-4 top-4 text-slate-400" />
+                    <textarea
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      rows="3"
+                      placeholder="Street, City, State, ZIP..."
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 transition-all outline-none font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: BANKING INFO */}
+            <div className="space-y-6">
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                    <Landmark size={20} />
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-900">Bank Details</h4>
+                </div>
+
+                <div className="space-y-5">
+                  <Input label="Account Number" name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="0000 0000 0000" />
+                  <Input label="Bank Name" name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Global Bank" />
+                  <Input label="Branch" name="branch" value={formData.branch} onChange={handleChange} placeholder="Downtown" />
+                  <Input label="IFSC Code" name="ifscCode" value={formData.ifscCode} onChange={handleChange} placeholder="GBNK0001234" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit}>
-        {/* Personal Details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div>
-            <label className="block mb-2 font-medium">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border rounded p-2"
-              placeholder="Enter your name"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Father's Name</label>
-            <input
-              type="text"
-              name="fatherName"
-              value={formData.fatherName}
-              onChange={handleChange}
-              className="w-full border rounded p-2"
-              placeholder="Enter father's name"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Gender</label>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="w-full border rounded p-2"
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Date of Birth</label>
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              className="w-full border rounded p-2"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Address */}
-        <div className="mb-6">
-          <label className="block mb-2 font-medium">Address</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-            rows="3"
-            placeholder="Enter your address"
-          ></textarea>
-        </div>
-
-        {/* Bank Account Details */}
-        <div className="mb-6">
-          <h3 className="text-2xl font-semibold mb-4">Bank Account Details</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-2 font-medium">Account Number</label>
-              <input
-                type="text"
-                name="accountNumber"
-                value={formData.accountNumber}
-                onChange={handleChange}
-                className="w-full border rounded p-2"
-                placeholder="Enter your account number"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">Bank Name</label>
-              <input
-                type="text"
-                name="bankName"
-                value={formData.bankName}
-                onChange={handleChange}
-                className="w-full border rounded p-2"
-                placeholder="Enter your bank name"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">Branch && Address</label>
-              <input
-                type="text"
-                name="branch"
-                value={formData.branch}
-                onChange={handleChange}
-                className="w-full border rounded p-2"
-                placeholder="Enter your branch name"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">IFSC Code</label>
-              <input
-                type="text"
-                name="ifscCode"
-                value={formData.ifscCode}
-                onChange={handleChange}
-                className="w-full border rounded p-2"
-                placeholder="Enter your IFSC code"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Update Profile
-        </button>
-      </form>
     </div>
   );
 };
+
+// Reusable Input Component for cleaner code
+const Input = ({ label, name, type = "text", value, onChange, placeholder }) => (
+  <div className="space-y-1.5">
+    <label className="text-sm font-bold text-slate-700 ml-1">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 transition-all outline-none font-medium text-slate-700 placeholder:text-slate-300"
+    />
+  </div>
+);
 
 export default Profile;
